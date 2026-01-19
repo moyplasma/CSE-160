@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Draw a point (1)</title>
+  </head>
+
+  <body onload="main()">
+
+    <div style="display: flex; align-items: flex-start; gap: 7px;">
+
+    <canvas id="webgl" width="400" height="400">
+    Please use a browser that supports "canvas"
+    </canvas>
+
+    <img id="refImage" src="ref.jpg" style="display: none; vertical-align: top; margin-left: 10px;" width="400" height="400">
+    </div>
+    <p id="numdot">xxx</p>
+
+    <button type="button", id="clear">Clear</button>
+    <button type="button" id="undo">Undo</button>
+    <br>
+    <button type="button", id="pointBttn">Point</button>
+    <button type="button", id="triangleBttn">Triangle</button>
+    <button type="button", id="circleBttn">Circle</button>
+    <br>
+     <button type="button" id="xsymmetry">SymmetryX: OFF</button>
+    <button type="button" id="ysymmetry">SymmetryY: OFF</button>
+    </p>
+     <button type="button", id="image">Super Cool Picture</button>
+    <p>
+      Circle Segments <input type="range" min="10" max="100" value="10" class="slider" id="segSlide">
+    <p>
+
+    <p>
+      Red <input type="range" min="0" max="100" value="100" class="slider" id="redSlide">
+    <p>
+      Green <input type="range" min="0" max="100" value="100" class="slider" id="greenSlide">
+    <p>
+      Blue <input type="range" min="0" max="100" value="100" class="slider" id="blueSlide">
+    <p>
+      Size <input type="range" min="3.5" max="30" value="5" class="slider" id="sizeSlide">
+
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="Point.js"></script>
+    <script src="Triangle.js"></script>
+    <script src="Circle.js"></script>
+    <script src="asg1.js"></script>
+  </body>
+</html>
