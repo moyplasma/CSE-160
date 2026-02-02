@@ -70,12 +70,16 @@ let g_backRightUpperLeg = 0;
 let g_backRightLowerLeg = 0;
 
 // Animation
-let g_startTime = performance.now() / 1000.0;
+g_startTime = performance.now() / 1000.0;
 let g_seconds = 0;
 let g_animationOn = false;      
 let g_neckAnimationOn = false;  
 let g_tailAnimationOn = false;
 let g_legsAnimationOn = false;
+let g_lastFrameTime = performance.now();
+let g_fpsSmoothed = 0;
+let g_fpsLastUpdate = 0;
+let g_fpsEl = null;
 
 // Poke Animation
 let g_bodyBounce = 0;
@@ -247,7 +251,7 @@ function addActionsForHtmlUI(){
     // Invert signs so motion matches mouse direction
     g_globalYaw = clamp(g_globalYaw - dx * DRAG_SENSITIVITY, -ANGLE_LIMIT, ANGLE_LIMIT);
     g_globalPitch = clamp(g_globalPitch - dy * DRAG_SENSITIVITY, -ANGLE_LIMIT, ANGLE_LIMIT);
-    renderAllShapes();
+    renderScene();
   });
 
   window.addEventListener('mouseup', function(ev){
@@ -337,9 +341,20 @@ function updateAnimationAngles() {
 }
 
 function tick() {
-  g_seconds = performance.now() / 1000.0 - g_startTime;
+  const now = performance.now();
+  const dt = now - g_lastFrameTime;
+  g_lastFrameTime = now;
+  if (dt > 0) {
+    const fps = 1000.0 / dt;
+    g_fpsSmoothed = g_fpsSmoothed ? (g_fpsSmoothed * 0.9 + fps * 0.1) : fps;
+    if (g_fpsEl && (now - g_fpsLastUpdate) > 200) {
+      g_fpsEl.textContent = `FPS: ${g_fpsSmoothed.toFixed(1)}`;
+      g_fpsLastUpdate = now;
+    }
+  }
+  g_seconds = now / 1000.0 - g_startTime;
   updateAnimationAngles();
-  renderAllShapes();
+  renderScene();
   requestAnimationFrame(tick);
 }
 
@@ -354,6 +369,8 @@ function main() {
   // Set up actions for the HTML UI elements
   addActionsForHtmlUI();
 
+  g_fpsEl = document.getElementById('fpsIndicator');
+
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -361,7 +378,7 @@ function main() {
   requestAnimationFrame(tick);
 }
 
-function renderAllShapes(ev){
+function renderScene(ev){
 
   var startTime = performance.now();
 
