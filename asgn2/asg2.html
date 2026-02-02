@@ -3,23 +3,40 @@
   <head>
     <meta charset="utf-8" />
     <title>Draw a point (1)</title>
+    <style>
+      .layout {
+        display: flex;
+        align-items: flex-start;
+        gap: 25px;
+        flex-wrap: wrap;
+      }
+      .left-column {
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
   </head>
 
   <body onload="main()">
 
     <h1>Blocky Animal – Dinosaur 🦕</h1>
 
-    <div class="container">
-      <!-- Canvas Section -->
-      <div class="canvas-section">
-        <canvas id="webgl" width="400" height="400">
-          Please use a browser that supports "canvas"
-        </canvas>
-      </div>
-    </div>
+    <div class="layout">
+      <div class="left-column">
+        <div class="container">
+          <!-- Canvas Section -->
+          <div class="canvas-section">
+            <canvas id="webgl" width="400" height="400">
+              Please use a browser that supports "canvas"
+            </canvas>
+            <div id="fpsIndicator">FPS: --</div>
+          </div>
+        </div>
 
-    <p>Click and Drag to rotate the view</p>
-    <p>Shift + Click for poke animation</p>
+        <p>Click and Drag to rotate the view</p>
+        <p>Shift + Click for poke animation</p>
+        <p>Added Cone as Non-cube Primitive</p>
+      </div>
 
       <!-- Controls Section -->
       <div class="controls-section">
@@ -143,6 +160,7 @@
         </div>
 
       </div>
+    </div>
 
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
