@@ -13,4 +13,6 @@
 - Performace Lab
 
 ### AI Assistance
-- **Claude**: Used AI to help debug code and for reoganizing body parts to have a proper hierarchy
+- Used to help debug code
+- Helped in reoganizing body parts to have a proper hierarchy
+- Implement a fps indicator that doesn't rely on ShapesList
