@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Draw a point (1)</title>
+  </head>
+
+  <body onload="main()">
+
+    <h1>Blocky Animal – Dinosaur 🦕</h1>
+
+    <div class="container">
+      <!-- Canvas Section -->
+      <div class="canvas-section">
+        <canvas id="webgl" width="400" height="400">
+          Please use a browser that supports "canvas"
+        </canvas>
+      </div>
+    </div>
+
+    <p>Click and Drag to rotate the view</p>
+    <p>Shift + Click for poke animation</p>
+
+      <!-- Controls Section -->
+      <div class="controls-section">
+
+        <div class="control-group">
+          <h3>🎬 Animation</h3>
+          <div class="button-row">
+            <button id="animationOnBtn" class="allOn">▶ All ON</button>
+            <button id="animationOffBtn" class="allOff">⏹ All OFF</button>
+          </div>
+          <div class="button-row">
+            <button id="neckAnimBtn" class="animNeck">🦒 Neck</button>
+            <button id="tailAnimBtn" class="animTail">🦎 Tail</button>
+            <button id="legsAnimBtn" class="animLegs">🦵 Legs</button>
+          </div>
+        </div>
+        
+        <!-- Camera Control -->
+        <div class="control-group">
+          <h3>📷 Camera</h3>
+          <div class="slider-row">
+            <span class="slider-label">Camera Angle:</span>
+            <input type="range" min="-180" max="180" value="0" id="angleSlide">
+            <span class="slider-value" id="angleSlideVal">0°</span>
+          </div>
+        </div>
+
+        <!-- Neck & Head Controls -->
+        <div class="control-group">
+          <h3>🦒 Neck & Head</h3>
+          <div class="slider-row">
+            <span class="slider-label">Neck Base:</span>
+            <input type="range" min="-30" max="30" value="0" id="neckBaseSlide">
+            <span class="slider-value" id="neckBaseVal">0°</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">Neck Mid:</span>
+            <input type="range" min="-30" max="30" value="0" id="neckMidSlide">
+            <span class="slider-value" id="neckMidVal">0°</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">Neck Top:</span>
+            <input type="range" min="-30" max="30" value="0" id="neckTopSlide">
+            <span class="slider-value" id="neckTopVal">0°</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">Head Nod:</span>
+            <input type="range" min="0" max="45" value="0" id="headSlide">
+            <span class="slider-value" id="headVal">0°</span>
+          </div>
+        </div>
+
+        <!-- Tail Controls -->
+        <div class="control-group">
+          <h3>🦎 Tail</h3>
+          <div class="slider-row">
+            <span class="slider-label">Tail Base:</span>
+            <input type="range" min="-45" max="45" value="0" id="tailBaseSlide">
+            <span class="slider-value" id="tailBaseVal">0°</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">Tail Mid:</span>
+            <input type="range" min="-45" max="45" value="0" id="tailMidSlide">
+            <span class="slider-value" id="tailMidVal">0°</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">Tail Tip:</span>
+            <input type="range" min="-45" max="45" value="0" id="tailTipSlide">
+            <span class="slider-value" id="tailTipVal">0°</span>
+          </div>
+        </div>
+
+        <!-- Front Legs Controls -->
+        <div class="control-group">
+          <h3>🦵 Front Legs</h3>
+          <div class="slider-row">
+            <span class="slider-label">FL Upper:</span>
+            <input type="range" min="-45" max="45" value="0" id="frontLeftUpperSlide">
+            <span class="slider-value" id="frontLeftUpperVal">0°</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">FL Lower:</span>
+            <input type="range" min="-45" max="45" value="0" id="frontLeftLowerSlide">
+            <span class="slider-value" id="frontLeftLowerVal">0°</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">FR Upper:</span>
+            <input type="range" min="-45" max="45" value="0" id="frontRightUpperSlide">
+            <span class="slider-value" id="frontRightUpperVal">0°</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">FR Lower:</span>
+            <input type="range" min="-45" max="45" value="0" id="frontRightLowerSlide">
+            <span class="slider-value" id="frontRightLowerVal">0°</span>
+          </div>
+        </div>
+
+        <!-- Back Legs Controls -->
+        <div class="control-group">
+          <h3>🦶 Back Legs</h3>
+          <div class="slider-row">
+            <span class="slider-label">BL Upper:</span>
+            <input type="range" min="-45" max="45" value="0" id="backLeftUpperSlide">
+            <span class="slider-value" id="backLeftUpperVal">0°</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">BL Lower:</span>
+            <input type="range" min="-45" max="45" value="0" id="backLeftLowerSlide">
+            <span class="slider-value" id="backLeftLowerVal">0°</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">BR Upper:</span>
+            <input type="range" min="-45" max="45" value="0" id="backRightUpperSlide">
+            <span class="slider-value" id="backRightUpperVal">0°</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">BR Lower:</span>
+            <input type="range" min="-45" max="45" value="0" id="backRightLowerSlide">
+            <span class="slider-value" id="backRightLowerVal">0°</span>
+          </div>
+        </div>
+
+      </div>
+
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="../lib/cuon-matrix.js"></script>
+    <script src="Point.js"></script>
+    <script src="Triangle.js"></script>
+    <script src="Circle.js"></script>
+    <script src="Cube.js"></script>
+    <script src="Cone.js"></script>
+    <script src="asg2.js"></script>
+  </body>
+</html>
