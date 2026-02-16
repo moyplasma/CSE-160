@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Asgn 3 — 3D World</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body onload="main()">
+
+  <h1>Dino Hunter</h1>
+
+  <div class="main-layout">
+    <div class="canvas-container">
+      <canvas id="webgl" width="600" height="450">
+        Please use a browser that supports "canvas"
+      </canvas>
+      <div class="crosshair"></div>
+      <div id="fpsCounter">FPS: --</div>
+      <div id="camPos">Pos: --</div>
+      <div id="dinoCounter">⬜⬜⬜⬜⬜ 0/5</div>
+      <div id="gameMessage">Find all 5 hidden dinosaurs!</div>
+    </div>
+
+    <div class="sidebar">
+      <div class="panel">
+        <h3>Controls</h3>
+        <p><span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span> — Move</p>
+        <p><span class="key">Q</span> / <span class="key">E</span> — Rotate left / right</p>
+        <p><span class="key">Mouse</span> — Click canvas, then move to look</p>
+        <p><span class="key">F</span> — Place block</p>
+        <p><span class="key">G</span> — Remove block</p>
+        <p><span class="key">Esc</span> — Release mouse</p>
+      </div>
+
+      <div class="panel">
+        <h3>Minimap</h3>
+        <canvas id="minimap" width="160" height="160"></canvas>
+        <div class="legend">
+          <span><span class="legend-dot" style="background:#ffff00;"></span>You</span>
+          <span><span class="legend-dot" style="background:#ff4444;"></span>Unfound</span>
+          <span><span class="legend-dot" style="background:#2ecc71;"></span>Found</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Quest</h3>
+        <p>Navigate the maze and find all 5 hidden dinosaurs! They come alive when discovered.</p>
+        <p style="margin-top:6px;color:#777;">Use the minimap to explore. Red dots = dinosaurs still hiding.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="../lib/webgl-utils.js"></script>
+  <script src="../lib/webgl-debug.js"></script>
+  <script src="../lib/cuon-utils.js"></script>
+  <script src="../lib/cuon-matrix.js"></script>
+  <script src="Cube.js"></script>
+  <script src="Map.js"></script>
+  <script src="Camera.js"></script>
+  <script src="World.js"></script>
+</body>
+</html>
