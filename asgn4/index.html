@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Assignment 4 – Lighting</title>
+  <style>
+    .layout {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 230px;
+    }
+    .control-group {
+      border: 1px solid #aaa;
+      padding: 8px 10px;
+    }
+    .control-group h3 {
+      margin: 0 0 6px 0;
+      font-size: 0.95em;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 3px 0;
+    }
+    .row label {
+      min-width: 80px;
+      font-size: 0.85em;
+    }
+    .row span {
+      font-size: 0.85em;
+      min-width: 30px;
+    }
+    button {
+      padding: 3px 8px;
+      font-size: 0.85em;
+      cursor: pointer;
+    }
+    button.active {
+      background: #4a4;
+      color: white;
+    }
+    #fpsEl {
+      font-size: 0.8em;
+      color: #555;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body onload="main()">
+
+  <h2>Assignment 4 – Lighting</h2>
+
+  <div class="layout">
+    <div>
+      <canvas id="webgl" width="600" height="450">
+        Please use a browser that supports canvas.
+      </canvas>
+      <div id="fpsEl">FPS: --</div>
+      <p style="font-size:0.85em; margin-top:4px;">
+        Click canvas to lock mouse &nbsp;|&nbsp; WASD to move &nbsp;|&nbsp; Mouse to look &nbsp;|&nbsp; Esc to unlock
+      </p>
+    </div>
+
+    <div class="controls">
+
+      <div class="control-group">
+        <h3>Lighting Toggles</h3>
+        <div class="row">
+          <button id="btnLighting" class="active">Lighting: ON</button>
+          <button id="btnNormals">Normals: OFF</button>
+        </div>
+        <div class="row">
+          <button id="btnPointLight" class="active">Point Light: ON</button>
+          <button id="btnSpotLight" class="active">Spot Light: ON</button>
+        </div>
+        <div class="row">
+          <button id="btnAnimate" class="active">Animate: ON</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3>Point Light Position</h3>
+        <div class="row">
+          <label>Angle:</label>
+          <input type="range" id="slideAngle" min="0" max="360" value="0" style="width:110px">
+          <span id="angleVal">0°</span>
+        </div>
+        <div class="row">
+          <label>Height:</label>
+          <input type="range" id="slideHeight" min="0.5" max="12" value="5" step="0.1" style="width:110px">
+          <span id="heightVal">5.0</span>
+        </div>
+        <div class="row">
+          <label>Radius:</label>
+          <input type="range" id="slideRadius" min="1" max="10" value="5" step="0.5" style="width:110px">
+          <span id="radiusVal">5.0</span>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3>Light Color</h3>
+        <div class="row">
+          <label>Red:</label>
+          <input type="range" id="slideR" min="0" max="255" value="255" style="width:110px">
+          <span id="rVal">255</span>
+        </div>
+        <div class="row">
+          <label>Green:</label>
+          <input type="range" id="slideG" min="0" max="255" value="255" style="width:110px">
+          <span id="gVal">255</span>
+        </div>
+        <div class="row">
+          <label>Blue:</label>
+          <input type="range" id="slideB" min="0" max="255" value="255" style="width:110px">
+          <span id="bVal">255</span>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3>Info</h3>
+        <p style="font-size:0.8em; margin:2px 0;">Two spheres show Phong shading clearly.</p>
+        <p style="font-size:0.8em; margin:2px 0;">kabu.obj loaded in center of scene.</p>
+        <p style="font-size:0.8em; margin:2px 0;">Spotlight is fixed overhead near origin.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="lib/webgl-utils.js"></script>
+  <script src="lib/webgl-debug.js"></script>
+  <script src="lib/cuon-utils.js"></script>
+  <script src="lib/cuon-matrix.js"></script>
+  <script src="Camera.js"></script>
+  <script src="Cube.js"></script>
+  <script src="Cone.js"></script>
+  <script src="Sphere.js"></script>
+  <script src="Model.js"></script>
+  <script src="asgn4.js"></script>
+</body>
+</html>
