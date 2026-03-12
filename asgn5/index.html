@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Inline favicon — stops the browser's automatic /favicon.ico 404 request -->
+  <link rel="icon" href="data:," />
+  <title>Dino Hunter Remastered: Jungle Ruins</title>
+  <style>
+    /* ── Reset & Base ──────────────────────────────────────── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0a0f0a;
+      overflow: hidden;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    #canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* ── HUD overlay ────────────────────────────────────────── */
+    /* Sits on top of the canvas; pointer-events none so it
+       doesn't interfere with pointer lock or mouse input.      */
+    #hud {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+
+    /* Discovery counter — top left */
+    #counter {
+      position: absolute;
+      top: 14px; left: 14px;
+      background: rgba(0, 0, 0, 0.58);
+      color: #e8d090;
+      padding: 7px 14px;
+      font-size: 1.05em;
+      border: 1px solid rgba(120, 90, 30, 0.6);
+      border-radius: 3px;
+      letter-spacing: 0.05em;
+    }
+
+    /* FPS — top right, unobtrusive */
+    #fps {
+      position: absolute;
+      top: 14px; right: 14px;
+      color: rgba(255, 255, 255, 0.30);
+      font-size: 0.72em;
+    }
+
+    /* Crosshair — center of screen */
+    #crosshair {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 18px;
+      text-shadow: 0 0 6px rgba(0, 0, 0, 0.9);
+      user-select: none;
+    }
+
+    /* Victory banner */
+    #victory {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.78);
+      color: #7aff7a;
+      padding: 22px 42px;
+      font-size: 1.35em;
+      border: 2px solid rgba(50, 140, 50, 0.7);
+      border-radius: 5px;
+      text-align: center;
+      display: none;
+      line-height: 1.6;
+    }
+
+    /* Proximity hint — fades in when near an undiscovered dino */
+    #proximityHint {
+      position: absolute;
+      bottom: 188px; right: 14px;
+      color: rgba(180, 255, 160, 0.88);
+      font-size: 0.78em;
+      letter-spacing: 0.04em;
+      text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      pointer-events: none;
+      text-align: right;
+    }
+
+    /* Minimap canvas — bottom right */
+    #minimap {
+      position: absolute;
+      bottom: 14px; right: 14px;
+      border: 1px solid rgba(160, 130, 70, 0.45);
+      border-radius: 2px;
+      opacity: 0.90;
+    }
+
+    /* ── Start overlay ──────────────────────────────────────── */
+    #startOverlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.80);
+      color: #e0c880;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      pointer-events: auto;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #startOverlay h1 {
+      font-size: 2.1em;
+      color: #f0c030;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+      letter-spacing: 0.06em;
+      text-align: center;
+    }
+
+    #startOverlay .subtitle {
+      font-size: 0.95em;
+      color: #b0a060;
+      max-width: 400px;
+      text-align: center;
+      line-height: 1.65;
+    }
+
+    #startOverlay .controls-box {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(180, 140, 50, 0.3);
+      border-radius: 4px;
+      padding: 12px 24px;
+      font-size: 0.88em;
+      color: #a09050;
+      line-height: 2;
+      min-width: 260px;
+    }
+
+    #startOverlay .controls-box .key {
+      display: inline-block;
+      color: #f0d060;
+      min-width: 80px;
+    }
+
+    .click-hint {
+      font-size: 1.0em;
+      color: #f0e060;
+      margin-top: 6px;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.55; }
+      50%       { opacity: 1.0;  }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Three.js renders into this canvas element -->
+  <canvas id="canvas"></canvas>
+
+  <!-- HUD overlaid on the canvas via fixed positioning -->
+  <div id="hud">
+    <div id="counter">🦕 Dinos Found: <span id="foundCount">0</span> / 5</div>
+    <div id="fps">FPS: --</div>
+    <div id="crosshair">·</div>
+    <div id="proximityHint">🦕 Something stirs nearby…</div>
+    <div id="victory">
+      🦕 All dinosaurs found!<br>
+      <span style="font-size: 0.68em; color: #90d890;">Jungle survey complete.</span>
+    </div>
+    <!-- Minimap drawn by minimap.js each frame -->
+    <canvas id="minimap" width="160" height="160"></canvas>
+  </div>
+
+  <!-- Click-to-start / instructions overlay -->
+  <div id="startOverlay">
+    <h1>🦕 Dino Hunter Remastered<br>
+        <span style="font-size: 0.55em; color: #c0a040; letter-spacing: 0.04em;">
+          Jungle Ruins
+        </span>
+    </h1>
+    <p class="subtitle">
+      Explore the ancient jungle ruins and find all 5 hidden<br>
+      dinosaur relics scattered throughout the site.
+    </p>
+    <div class="controls-box">
+      <div><span class="key">W A S D</span> Move</div>
+      <div><span class="key">Mouse</span> Look around</div>
+      <div><span class="key">ESC</span> Release mouse</div>
+    </div>
+    <div class="click-hint">▶ Click anywhere to begin</div>
+  </div>
+
+  <!-- Three.js via importmap — loads ES module versions of the library
+       and its add-ons (controls, loaders, utils).
+       Reference: https://threejs.org/manual/#en/fundamentals -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <!-- Entry point — all game logic lives in JS modules -->
+  <script type="module" src="js/main.js"></script>
+
+</body>
+</html>
